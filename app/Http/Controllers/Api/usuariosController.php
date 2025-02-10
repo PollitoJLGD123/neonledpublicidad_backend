@@ -47,9 +47,7 @@ class UsuariosController extends Controller
         $credentials = ['email' => $request->email, 'password' => $request->password];
 
 
-        if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        
 
         return response()->json(["status" => 200, "token" => compact('token')["token"], "data" => User::where("email", $request->email)->first()]);
     }

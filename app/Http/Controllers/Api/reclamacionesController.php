@@ -13,9 +13,6 @@ class ReclamacionesController extends Controller
     public function create(){
         return ;
     }
-    public function update(){
-        return ;
-    }
     public function delete($id){
         return ;
     }
