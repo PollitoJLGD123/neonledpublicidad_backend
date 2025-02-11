@@ -9,17 +9,15 @@ use App\Http\Controllers\Api\UsuariosController;
 use App\Models\Productos;
 
 // Api Contactanos
-// Ruta para obtener contactos con paginación (de 20 en 20)
-Route::get('/contactanos', [ContactosController::class, "get"]);
-// Usar validacion para  los datos con VALIDATE de laravel
-// Ruta para guardar contacto
-Route::post('/contactanos', [ContactosController::class, "create"]);
-// Ruta para actualizar el estado de un contacto (de 0 a 1)
-Route::put('/contactanos/{id}', [ContactosController::class, "update"]);
-// Ruta para eliminar un contacto por ID
-Route::delete('/contactanos/{id}', [ContactosController::class, "delete"]);
+Route::prefix('contactos')->group(function () {
+    Route::get('/', [ContactanosController::class, 'get']); // Obtener lista de contactos
+    Route::post('/', [ContactanosController::class, 'create']); // Crear un nuevo contacto
+    Route::put('/{id}/estado', [ContactanosController::class, 'updateEstado']); // Actualizar el estado de un contacto
+    Route::delete('/{id}', [ContactanosController::class, 'delete']); // Eliminar un contacto
+});
 
-// Api Contactanos
+
+// Api Productos
 // Ruta para obtener contactos con paginación (de 20 en 20)
 Route::get('/productos', [ProductosController::class, "get"]);
 // Usar validacion para  los datos con VALIDATE de laravel
