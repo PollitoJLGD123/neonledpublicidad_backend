@@ -6,17 +6,27 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductosController;
 use App\Http\Controllers\Api\ReclamacionesController;
 use App\Http\Controllers\Api\UsuariosController;
+use App\Models\Productos;
 
 // Api Contactanos
+Route::prefix('contactos')->group(function () {
+    Route::get('/', [ContactanosController::class, 'get']); // Obtener lista de contactos
+    Route::post('/', [ContactanosController::class, 'create']); // Crear un nuevo contacto
+    Route::put('/{id}/estado', [ContactanosController::class, 'updateEstado']); // Actualizar el estado de un contacto
+    Route::delete('/{id}', [ContactanosController::class, 'delete']); // Eliminar un contacto
+});
+
+
+// Api Productos
 // Ruta para obtener contactos con paginación (de 20 en 20)
-Route::get('/contactanos', [ContactosController::class, "get"]);
+Route::get('/productos', [ProductosController::class, "get"]);
 // Usar validacion para  los datos con VALIDATE de laravel
 // Ruta para guardar contacto
-Route::post('/contactanos', [ContactosController::class, "create"]);
+Route::post('/productos', [ProductosController::class, "create"]);
 // Ruta para actualizar el estado de un contacto (de 0 a 1)
-Route::put('/contactanos/{id}', [ContactosController::class, "update"]);
+// Route::put('/productos/{id}', [ProductosController::class, "update"]);
 // Ruta para eliminar un contacto por ID
-Route::delete('/contactanos/{id}', [ContactosController::class, "delete"]);
+Route::delete('/productos/{id}', [ProductosController::class, "delete"]);
 
 
 // Api Libro de reclamaciones  
@@ -31,12 +41,12 @@ Route::delete('/reclamaciones/{id}', [ReclamacionesController::class, "delete"])
 
 // Api de Modales de contacto
 // Ruta para obtener contactos con paginación (de 20 en 20)
-Route::get('/modal', [ProductosController::class, "get"]);
+// Route::get('/modal', [ProductosController::class, "get"]);
 // Usar validacion para  los datos con VALIDATE de laravel
 // Api para guardar información en el backend (nombre, telefono, correo, servicio_id)
-Route::post('/modal', [ProductosController::class, "create"]);
+// Route::post('/modal', [ProductosController::class, "create"]);
 // Ruta para eliminar un contacto por ID
-Route::delete('/modal/{id}', [ProductosController::class, "delete"]);
+// Route::delete('/modal/{id}', [ProductosController::class, "delete"]);
 
 
 //login de usuario
