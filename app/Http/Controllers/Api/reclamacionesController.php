@@ -19,7 +19,7 @@ class ReclamacionesController extends Controller
             return response()->json([
                 'message' => 'Error al obtener las reclamaciones',
                 'error' => $e->getMessage()
-            ], 500);
+            ], 500); 
         }
     }
 
