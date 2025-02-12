@@ -63,8 +63,6 @@ class ReclamacionesController extends Controller
             ], 500);
         }
     }
-<<<<<<< HEAD
-
     /**
      * Eliminar una reclamación por ID.
      */
@@ -83,9 +81,5 @@ class ReclamacionesController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
-=======
-    public function delete($id){
-        return ;
->>>>>>> 24aeb94aade3d6de4c4e0b8d43688b25e6397950
     }
 }
