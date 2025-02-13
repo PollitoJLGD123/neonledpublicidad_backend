@@ -1,12 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\ContactosController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\ContactanosController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductosController;
 use App\Http\Controllers\Api\ReclamacionesController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UsuariosController;
-use App\Models\Productos;
 
 // Api Contactanos
 Route::prefix('contactos')->group(function () {
@@ -50,16 +49,16 @@ Route::delete('/reclamaciones/{id}', [ReclamacionesController::class, "delete"])
 
 
 //login de usuario
-Route::post('/user/login', [UsuariosController::class, "login"]);
+Route::post('/user/login', [UserController::class, "login"]);
 // Ruta para obtener usuarios con paginación (de 20 en 20)
-Route::get('/user', [UsuariosController::class, "getAllByPage"]);
+Route::get('/user', [UserController::class, "getAllByPage"]);
 // Ruta para crear un usuario con datos (name, email, password)
-Route::post('/user', [UsuariosController::class, "create"]);
+Route::post('/user', [UserController::class, "create"]);
 // Ruta para crear un usuario con datos (name) y id por parametros
-Route::put('/user/{id}', [UsuariosController::class, "update"]);
+Route::put('/user/{id}', [UserController::class, "update"]);
 // Ruta para actualizar contraseña de un usuario con datos (password) y id por parametros
-Route::put('/user/pass/{id}', [UsuariosController::class, "updatePass"]);
+Route::put('/user/pass/{id}', [UserController::class, "updatePass"]);
 // Ruta para eliminar un usuario con id por parametros
-Route::delete('/user/{id}', [UsuariosController::class, "delete"]);
+Route::delete('/user/{id}', [UserController::class, "delete"]);
 
 

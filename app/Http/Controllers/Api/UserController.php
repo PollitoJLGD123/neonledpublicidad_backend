@@ -6,31 +6,42 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
-class UsuariosController extends Controller
+class UserController extends Controller
 {
+
+    public function getById($id)
+    {
+
+        $validate = Validator::make(["id" => $id], [
+            "id" => "required|numeric",
+        ]);
+
+        if ($validate->fails()) return response()->json(["status" => 422, "message" => "Error de validación", "Errors" => $validate->errors()]);
+
+        $user = User::where("id", $id)->get();
+
+        return response()->json([
+            "status" => 200,
+            "data" => $user
+        ]);
+    }
+
     public function getAllByPage(Request $request)
     {
 
-        $page = 1;
-        $perPage = 2;
+        $users = User::orderBy('id', 'desc')->paginate(20);
 
-        $validate = Validator::make($request->all(), [
-            "page" => "required|numeric"
+        return response()->json([
+            "status" => 200,
+            'data' => $users->items(),
+            'total' => $users->total(),
+            'page' => $users->currentPage()
         ]);
-
-        if (!$validate->fails()) {
-            $page = intval($request->query("page"));
-        }
-
-        $users = User::orderBy('created_at', 'desc')->forPage($page, $perPage)->get();
-
-        return response()->json(["status" => 200, "data" => $users]);
     }
 
     public function login(Request $request)
@@ -44,12 +55,13 @@ class UsuariosController extends Controller
         if ($validate->fails()) return response()->json(["status" => 422, "message" => "fallo de validacion", "errores" => $validate->errors()]);
 
 
-        $credentials = ['email' => $request->email, 'password' => $request->password];
+        $user = User::where('email', $request->email)->first();
 
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json(["status" => 409, "message" => "Credenciales incorrectas"]);
+        }
 
-        
-
-        return response()->json(["status" => 200, "token" => compact('token')["token"], "data" => User::where("email", $request->email)->first()]);
+        return response()->json(["status" => 200, "token" => $user->createToken('auth_token')->plainTextToken, "data" => User::where("email", $request->email)->first()]);
     }
 
     public function create(Request $request)
@@ -80,13 +92,13 @@ class UsuariosController extends Controller
         $validate = Validator::make(["id" => $request->id], [
             "id" => "required|numeric",
         ]);
+
         if ($validate->fails()) return response()->json(["status" => 422, "message" => "Error de validación", "Errors" => $validate->errors()]);
 
         $validate = Validator::make($request->all(), [
             "name" => "required|string|max:255",
         ]);
         if ($validate->fails()) return response()->json(["status" => 422, "message" => "Error de validación", "Errors" => $validate->errors()]);
-
 
         $response = User::where(["id" => intval($id)])->update(["name" => $request->name]);
 
@@ -104,7 +116,7 @@ class UsuariosController extends Controller
         $validate = Validator::make($request->all(), [
             "password" => "required|string|min:4",
         ]);
-        if ($validate->fails()) return response()->json(["status" => 422, "message" => "Error de validación", "Errors" => $validate->errors()]);
+        if ($validate->fails()) return response()->json(["status" => 422, "message" => "Error de validación", "Errors" => $validate->errors(), "data" => $request->all()]);
 
         $response = User::where(["id" => intval($id)])->update(["password" => Hash::make($request->password)]);
 
@@ -113,14 +125,24 @@ class UsuariosController extends Controller
 
     public function delete(Request $request, $id)
     {
- 
+
         $validate = Validator::make(["id" => $id], [
             "id" => "required|numeric",
         ]);
+
         if ($validate->fails()) return response()->json(["status" => 422, "message" => "Error de validación", "Errors" => $validate->errors()]);
+
+        if (intval($id) == 1) return response()->json(["status" => 422, "message" => "El admin no puede ser eliminado"]);
 
         $response = User::where(["id" => intval($id)])->delete();
 
         if ($response) return response()->json(["status" => 200, "message" => "Registro eliminado correctamente"]);
+    }
+
+    public function logout(Request $request)
+    {
+
+        $request->user()->tokens()->delete(); // Revoca todos los tokens del usuario
+        return response()->json(["status" => 200, 'message' => 'Tokens revoked']);
     }
 }
