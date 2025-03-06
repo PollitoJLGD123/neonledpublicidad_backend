@@ -5,7 +5,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reclamaciones extends Model
 {
-    protected $table = 'libroreclamacion';
+    protected $table = 'reclamacion';
+
+    protected $primaryKey = 'id_reclamacion';
 
     // Campos que se pueden asignar masivamente
     protected $fillable = [
