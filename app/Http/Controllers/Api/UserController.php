@@ -16,7 +16,6 @@ class UserController extends Controller
 
     public function getById($id)
     {
-
         $validate = Validator::make(["id" => $id], [
             "id" => "required|numeric",
         ]);

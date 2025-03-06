@@ -10,18 +10,19 @@ class Contactanos extends Model
     use HasFactory;
 
     protected $table = 'contactanos'; // Nombre correcto de la tabla en la base de datos
+    protected $primaryKey = 'id_contactanos';
 
     // Campos que se pueden asignar de forma masiva
     protected $fillable = [
-        'nombre', 
-        'apellido', 
-        'telefono', 
-        'distrito', 
-        'email', 
-        'tipo_reclamo', 
-        'mensaje', 
-        'estado', 
-        'fecha_hora', 
+        'nombre',
+        'apellido',
+        'telefono',
+        'distrito',
+        'email',
+        'tipo_reclamo',
+        'mensaje',
+        'estado',
+        'fecha_hora',
         'fecha_hora_actualizacion'
     ];
 
