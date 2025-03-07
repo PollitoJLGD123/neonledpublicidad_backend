@@ -29,7 +29,7 @@ class ReclamacionSeeder extends Seeder
                 'descripcion_servicio' => 'Falla de letras iluminadas',
                 'declaracion_veraz' => true,
                 'acepta_politica' => true,
-                'estado' => 0,
+                'estado' => 'activa',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -47,7 +47,7 @@ class ReclamacionSeeder extends Seeder
                 'descripcion_servicio' => 'Cobro indebido en la factura mensual.',
                 'declaracion_veraz' => true,
                 'acepta_politica' => true,
-                'estado' => 0,
+                'estado' => '´pendiente',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

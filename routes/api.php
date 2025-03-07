@@ -8,12 +8,11 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UsuariosController;
 
 // Api Contactanos
-Route::prefix('contactos')->group(function () {
-    Route::get('/', [ContactanosController::class, 'get']); // Obtener lista de contactos
-    Route::post('/', [ContactanosController::class, 'create']); // Crear un nuevo contacto
-    Route::put('/{id}/estado', [ContactanosController::class, 'updateEstado']); // Actualizar el estado de un contacto
-    Route::delete('/{id}', [ContactanosController::class, 'delete']); // Eliminar un contacto
-});
+
+Route::get('/contactanos', [ContactanosController::class, 'get']);
+Route::post('/create_contactanos', [ContactanosController::class, 'create']);
+Route::put('/contactanos/{id}/estado', [ContactanosController::class, 'updateEstado']);
+Route::delete('/eliminar_contacto/{id}', [ContactanosController::class, 'delete']);
 
 
 // Api Productos
@@ -28,7 +27,7 @@ Route::post('/productos', [ProductosController::class, "create"]);
 Route::delete('/productos/{id}', [ProductosController::class, "delete"]);
 
 
-// Api Libro de reclamaciones  
+// Api Libro de reclamaciones
 // Ruta para obtener contactos con paginación (de 20 en 20)
 Route::get('/reclamaciones', [ReclamacionesController::class, "get"]);
 // Usar validacion para  los datos con VALIDATE de laravel

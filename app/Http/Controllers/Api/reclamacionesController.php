@@ -13,13 +13,13 @@ class ReclamacionesController extends Controller
     public function get()
     {
         try {
-            $reclamaciones = Reclamaciones::orderBy('id', 'desc')->paginate(20);
+            $reclamaciones = Reclamaciones::orderBy('id_reclamacion', 'desc')->paginate(20);
             return response()->json($reclamaciones);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al obtener las reclamaciones',
                 'error' => $e->getMessage()
-            ], 500); 
+            ], 500);
         }
     }
 
@@ -38,17 +38,15 @@ class ReclamacionesController extends Controller
                 'direccion' => 'required|string|max:250',
                 'distrito' => 'required|string|max:250',
                 'tipo_servicio' => 'required|string|max:50',
-                'fecha_incidente' => 'required|date', // Validar como fecha
-                'monto_reclamado' => 'required|numeric', // Validar como número decimal
+                'fecha_incidente' => 'required|date',
+                'monto_reclamado' => 'required|numeric',
                 'descripcion_servicio' => 'required|string',
-                'declaracion_veraz' => 'required|boolean', // Validar como booleano
-                'acepta_politica' => 'required|accepted', // Validar como aceptado
-                'estado' => 'nullable|string|max:50', // Estado es opcional (tiene valor predeterminado)
+                'declaracion_veraz' => 'required|boolean',
+                'acepta_politica' => 'required|accepted',
+                'estado' => 'nullable|string',
             ]);
 
-            // Asignar valores predeterminados si no se proporcionan
             $validated['estado'] = $validated['estado'] ?? 'pendiente';
-            $validated['declaracion_veraz'] = $validated['declaracion_veraz'] ?? false;
 
             $reclamacion = Reclamaciones::create($validated);
 

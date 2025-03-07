@@ -26,7 +26,7 @@ return new class extends Migration
             $table->text("descripcion_servicio");
             $table->boolean("declaracion_veraz");
             $table->boolean("acepta_politica");
-            $table->boolean("estado")->default(0);
+            $table->string("estado",50);
             $table->timestamps();
         });
     }
