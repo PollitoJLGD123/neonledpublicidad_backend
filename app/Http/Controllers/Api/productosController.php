@@ -11,14 +11,14 @@ class ProductosController extends Controller
 {
     public function get()
     {
-        return Productos::orderBy('id', 'desc')
+        return Productos::orderBy('id_producto', 'desc')
                         ->paginate(20);
     }
 
     public function show($id)
     {
-        $producto = Productos::find($id);
-        
+        $producto = Productos::findOrFail($id);
+
         if (!$producto) {
             return response()->json([
                 'message' => 'Producto no encontrado'
@@ -33,7 +33,7 @@ class ProductosController extends Controller
         // Validación de datos
         $request->validate([
             'nombre' => 'required|string|max:250',
-            'descripcion' => 'required|string'
+            'descripcion' => 'required|string|max:250'
         ]);
 
         // Crear nuevo producto
@@ -56,8 +56,8 @@ class ProductosController extends Controller
             'descripcion' => 'required|string'
         ]);
 
-        $producto = Productos::find($id);
-        
+        $producto = Productos::findOrFail($id);
+
         if (!$producto) {
             return response()->json([
                 'message' => 'Producto no encontrado'
@@ -77,15 +77,15 @@ class ProductosController extends Controller
     public function delete($id)
     {
         $producto = Productos::find($id);
-        
+
         if (!$producto) {
             return response()->json([
                 'message' => 'Producto no encontrado'
             ], 404);
         }
-        
+
         $producto->delete();
-        
+
         return response()->json([
             'message' => 'Producto eliminado exitosamente'
         ]);

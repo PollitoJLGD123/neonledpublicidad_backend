@@ -36,7 +36,7 @@ class ContactanosController extends Controller
 
         // Guardar el contacto con estado "0" por defecto
         $contacto = Contactanos::create(array_merge(
-            $request->all(), 
+            $request->all(),
             ['estado' => '0']
         ));
 
@@ -46,7 +46,7 @@ class ContactanosController extends Controller
     // Actualizar el estado de un contacto de "0" a "1"
     public function updateEstado($id)
     {
-        $contacto = Contactanos::find($id);
+        $contacto = Contactanos::findOrFail($id);
 
         if (!$contacto) {
             return response()->json(['message' => 'Contacto no encontrado'], 404);
