@@ -20,7 +20,7 @@ Route::delete('/eliminar_contacto/{id}', [ContactanosController::class, 'delete'
 Route::get('/productos', [ProductosController::class, "get"]);
 // Usar validacion para  los datos con VALIDATE de laravel
 // Ruta para guardar contacto
-Route::post('/productos', [ProductosController::class, "create"]);
+Route::post('/create_productos', [ProductosController::class, "create"]);
 // Ruta para actualizar el estado de un contacto (de 0 a 1)
 // Route::put('/productos/{id}', [ProductosController::class, "update"]);
 // Ruta para eliminar un contacto por ID
@@ -32,7 +32,7 @@ Route::delete('/productos/{id}', [ProductosController::class, "delete"]);
 Route::get('/reclamaciones', [ReclamacionesController::class, "get"]);
 // Usar validacion para  los datos con VALIDATE de laravel
 // Api para guardar información en el backend ( nompre, apellido, tipo documento, nmr documento, email, celular, direccion, distrito, ciudad, tipo de reclamo, servicio, reclamo, ckeck, acepta politica de privacidad)
-Route::post('/reclamaciones', [ReclamacionesController::class, "create"]);
+Route::post('/create_reclamaciones', [ReclamacionesController::class, "create"]);
 // Ruta para eliminar un contacto por ID
 Route::delete('/reclamaciones/{id}', [ReclamacionesController::class, "delete"]);
 

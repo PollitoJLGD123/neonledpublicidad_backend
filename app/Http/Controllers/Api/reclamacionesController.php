@@ -46,8 +46,6 @@ class ReclamacionesController extends Controller
                 'estado' => 'nullable|string',
             ]);
 
-            $validated['estado'] = $validated['estado'] ?? 'pendiente';
-
             $reclamacion = Reclamaciones::create($validated);
 
             return response()->json([

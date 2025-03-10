@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Contactanos;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class ContactanosController extends Controller
 {
@@ -19,7 +20,7 @@ class ContactanosController extends Controller
     // Crear un nuevo contacto
     public function create(Request $request)
     {
-        // Validar los datos
+
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|string|max:250',
             'apellido' => 'required|string|max:250',
@@ -34,16 +35,15 @@ class ContactanosController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        // Guardar el contacto con estado "0" por defecto
-        $contacto = Contactanos::create(array_merge(
-            $request->all(),
-            ['estado' => '0']
-        ));
+        $contacto = Contactanos::create(array_merge($request->all(), [
+            'fecha_hora' => Carbon::now(),
+            'fecha_hora_actualizacion' => Carbon::now(),
+            'estado' => '0'
+        ]));
 
         return response()->json(['message' => 'Contacto creado con éxito', 'contacto' => $contacto], 201);
     }
 
-    // Actualizar el estado de un contacto de "0" a "1"
     public function updateEstado($id)
     {
         $contacto = Contactanos::findOrFail($id);

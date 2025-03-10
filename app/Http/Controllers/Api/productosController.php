@@ -11,8 +11,7 @@ class ProductosController extends Controller
 {
     public function get()
     {
-        return Productos::orderBy('id_producto', 'desc')
-                        ->paginate(20);
+        return Productos::orderBy('id_producto', 'desc')->paginate(20);
     }
 
     public function show($id)
