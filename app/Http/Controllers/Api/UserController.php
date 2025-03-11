@@ -45,22 +45,45 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-
         $validate = Validator::make($request->all(), [
-            "email" => "required|email|exists:users,email",
+            "email" => "required|email",
             "password" => "required|string|min:4",
         ]);
 
-        if ($validate->fails()) return response()->json(["status" => 422, "message" => "fallo de validacion", "errores" => $validate->errors()]);
-
+        if ($validate->fails()) {
+            return response()->json([
+                "success" => false,
+                "message" => "Fallo de validación",
+                "errors" => $validate->errors()
+            ], 422);
+        }
 
         $user = User::where('email', $request->email)->first();
 
-        if (!Hash::check($request->password, $user->password)) {
-            return response()->json(["status" => 409, "message" => "Credenciales incorrectas"]);
+        if (!$user) {
+            return response()->json([
+                "success" => false,
+                "message" => "Usuario no encontrado"
+            ], 404);
         }
 
-        return response()->json(["status" => 200, "token" => $user->createToken('auth_token')->plainTextToken, "data" => User::where("email", $request->email)->first()]);
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json([
+                "success" => false,
+                "message" => "Credenciales incorrectas"
+            ], 401);
+        }
+
+        return response()->json([
+            "success" => true,
+            "message" => "Inicio de sesión exitoso",
+            "token" => $user->createToken('auth_token')->plainTextToken,
+            "user" => [
+                "id" => $user->id,
+                "name" => $user->name,
+                "email" => $user->email,
+            ]
+        ], 200);
     }
 
     public function create(Request $request)
