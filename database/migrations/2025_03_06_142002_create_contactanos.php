@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string("telefono", 15);
             $table->string("distrito", 100);
             $table->string("email", 100);
-            $table->enum('detalle_reclamacion', ['CONSULTA', 'RECLAMO', 'SUGERENCIA'])->default('PENDIENTE');
+            $table->enum('detalle_reclamacion', ['CONSULTA', 'RECLAMO', 'SUGERENCIA'])->default('CONSULTA');
             $table->text("mensaje");
             $table->boolean("estado")->default(0);
             $table->timestamp("fecha_hora");
