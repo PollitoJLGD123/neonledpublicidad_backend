@@ -25,6 +25,7 @@ class UserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            
             [
                 'name' => 'Gonzalo',
                 'email' => 'gonzalo@example.com',
@@ -33,7 +34,18 @@ class UserSeeder extends Seeder
                 'remember_token' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]
+            ],
+
+            [
+                'name' => 'Kevin',
+                'email' => 'kevin@gmail.com',
+                'email_verified_at' => Carbon::now(),
+                'password' => Hash::make('1234'),
+                'remember_token' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
         ];
 
         DB::table('users')->insert($users);
