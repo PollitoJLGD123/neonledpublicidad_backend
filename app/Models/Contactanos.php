@@ -9,26 +9,21 @@ class Contactanos extends Model
 {
     use HasFactory;
 
-    protected $table = 'contactanos'; // Nombre correcto de la tabla en la base de datos
+    protected $table = 'contactanos';
     protected $primaryKey = 'id_contactanos';
+    public $timestamps = false;
 
-    // Campos que se pueden asignar de forma masiva
     protected $fillable = [
         'nombre',
         'apellido',
         'telefono',
         'distrito',
         'email',
-        'tipo_reclamo',
+        'detalle_reclamacion',
         'mensaje',
         'estado',
         'fecha_hora',
-        'fecha_hora_actualizacion'
+        'fecha_hora_actualizacion',
     ];
-
-    // Deshabilitar las columnas automáticas de timestamps si están gestionadas manualmente en la tabla
-    public $timestamps = false;
-
-    // Opcional: definir las columnas de fechas explícitas para el manejo de timestamp
-    protected $dates = ['fecha_hora', 'fecha_hora_actualizacion'];
+    
 }

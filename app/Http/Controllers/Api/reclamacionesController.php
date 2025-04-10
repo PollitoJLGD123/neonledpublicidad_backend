@@ -3,9 +3,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Reclamaciones;
+use App\Models\Reclamacion;
 
-class ReclamacionesController extends Controller
+class ReclamacionController extends Controller
 {
     /**
      * Obtener todas las reclamaciones con paginación.
@@ -13,7 +13,7 @@ class ReclamacionesController extends Controller
     public function get()
     {
         try {
-            $reclamaciones = Reclamaciones::orderBy('id_reclamacion', 'desc')->paginate(20);
+            $reclamaciones = Reclamacion::orderBy('id_reclamacion', 'desc')->paginate(20);
             return response()->json($reclamaciones);
         } catch (\Exception $e) {
             return response()->json([
@@ -46,7 +46,7 @@ class ReclamacionesController extends Controller
                 'estado' => 'nullable|string',
             ]);
 
-            $reclamacion = Reclamaciones::create($validated);
+            $reclamacion = Reclamacion::create($validated);
 
             return response()->json([
                 'message' => 'Reclamación creada exitosamente',
@@ -65,7 +65,7 @@ class ReclamacionesController extends Controller
     public function delete($id)
     {
         try {
-            $reclamacion = Reclamaciones::findOrFail($id);
+            $reclamacion = Reclamacion::findOrFail($id);
             $reclamacion->delete();
 
             return response()->json([
