@@ -2,57 +2,49 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-class ReclamacionSeeder extends Seeder
+class ReclamacionesSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $reclamaciones = [
+        DB::table('reclamaciones')->insert([
             [
-                'nombre' => 'Juan',
-                'apellido' => 'Perez',
-                'email' => 'juan.perez@example.com',
-                'telefono' => '987654321',
+                'nombre' => 'Carlos',
+                'apellido' => 'Ramírez',
+                'email' => 'carlos@example.com',
+                'telefono' => '998877665',
                 'departamento' => 'Lima',
                 'direccion' => 'Av. Siempre Viva 123',
-                'distrito' => 'Miraflores',
-                'tipo_servicio' => 'Digital',
-                'fecha_incidente' => Carbon::now()->subDays(10),
-                'monto_reclamado' => 150.75,
-                'descripcion_servicio' => 'Falla de letras iluminadas',
-                'declaracion_veraz' => true,
-                'acepta_politica' => true,
-                'estado' => 'activa',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+                'distrito' => 'Surco',
+                'id_servicio' => 1,
+                'fechaIncidente' => '2025-03-15',
+                'montoReclamado' => 120.50,
+                'descripcionServicio' => 'El servicio no cumplió lo prometido.',
+                'checkReclamoForm' => true,
+                'aceptaPoliticaPrivacidad' => true,
+                'fechaReclamo' => Carbon::now(),
+                'estadoReclamo' => 'PENDIENTE'
+            ], 
             [
-                'nombre' => 'Maria',
-                'apellido' => 'Gonzalez',
-                'email' => 'maria.gonzalez@example.com',
-                'telefono' => '987123456',
-                'departamento' => 'Arequipa',
-                'direccion' => 'Jr. Las Palmeras 456',
-                'distrito' => 'Cayma',
-                'tipo_servicio' => 'Acompañamiento redes',
-                'fecha_incidente' => Carbon::now()->subDays(5),
-                'monto_reclamado' => 200.50,
-                'descripcion_servicio' => 'Cobro indebido en la factura mensual.',
-                'declaracion_veraz' => true,
-                'acepta_politica' => true,
-                'estado' => '´pendiente',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
-        ];
-
-        DB::table('reclamacion')->insert($reclamaciones);
+                'nombre' => 'Carlitos',
+                'apellido' => 'Ramírez',
+                'email' => 'carlitoss@example.com',
+                'telefono' => '98177665',
+                'departamento' => 'La Libertad',
+                'direccion' => 'Av. Siempre Viva 123',
+                'distrito' => 'Chepén',
+                'id_servicio' => 1,
+                'fechaIncidente' => '2025-03-15',
+                'montoReclamado' => 120.50,
+                'descripcionServicio' => 'El servicio no cumplió lo prometido.',
+                'checkReclamoForm' => true,
+                'aceptaPoliticaPrivacidad' => true,
+                'fechaReclamo' => Carbon::now(),
+                'estadoReclamo' => 'ATENDIDO'
+            ],
+        ]);
     }
 }
