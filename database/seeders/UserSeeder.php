@@ -22,8 +22,6 @@ class UserSeeder extends Seeder
                 'email_verified_at' => Carbon::now(),
                 'password' => Hash::make('12345678'),
                 'remember_token' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             
             [
@@ -32,8 +30,6 @@ class UserSeeder extends Seeder
                 'email_verified_at' => null,
                 'password' => Hash::make('12345678'),
                 'remember_token' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
 
             [
@@ -42,8 +38,6 @@ class UserSeeder extends Seeder
                 'email_verified_at' => Carbon::now(),
                 'password' => Hash::make('1234'),
                 'remember_token' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
 
         ];
