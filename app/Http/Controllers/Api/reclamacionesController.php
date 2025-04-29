@@ -1,81 +1,102 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Reclamacion;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
-class ReclamacionController extends Controller
+class ReclamacionesController extends Controller
 {
-    /**
-     * Obtener todas las reclamaciones con paginación.
-     */
-    public function get()
+    public function get(Request $request)
     {
-        try {
-            $reclamaciones = Reclamacion::orderBy('id_reclamacion', 'desc')->paginate(20);
-            return response()->json($reclamaciones);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error al obtener las reclamaciones',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        $reclamaciones = Reclamacion::orderBy('id_reclamacion', 'asc')->paginate(4);
+        return response()->json($reclamaciones, 200);
     }
 
-    /**
-     * Crear una nueva reclamación.
-     */
+    public function getById($id){
+        $reclamacion = Reclamacion::find($id);
+
+        if (!$reclamacion) {
+            return response()->json(['error' => 'Reclamación no encontrada'], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $reclamacion
+        ], 200);
+    }
+
+    /* Guardar una reclamación */
     public function create(Request $request)
     {
-        try {
-            $validated = $request->validate([
-                'nombre' => 'required|string|max:100',
-                'apellido' => 'required|string|max:100',
-                'email' => 'required|email|max:100',
-                'telefono' => 'required|string|max:20',
-                'departamento' => 'required|string|max:100',
-                'direccion' => 'required|string|max:250',
-                'distrito' => 'required|string|max:250',
-                'tipo_servicio' => 'required|string|max:50',
-                'fecha_incidente' => 'required|date',
-                'monto_reclamado' => 'required|numeric',
-                'descripcion_servicio' => 'required|string',
-                'declaracion_veraz' => 'required|boolean',
-                'acepta_politica' => 'required|accepted',
-                'estado' => 'nullable|string',
-            ]);
+        // Validación de datos
+        $validated = Validator::make($request->all(), [
+            'nombre' => 'required|string|max:100',
+            'apellido' => 'required|string|max:100',
+            'email' => 'required|email|max:100',
+            'telefono' => 'required|string|max:20',
+            'departamento' => 'nullable|string|max:100',
+            'direccion' => 'required|string|max:250',
+            'distrito' => 'required|string|max:250',
+            'id_servicio' => 'required|integer',
+            'fechaIncidente' => 'required|date',
+            'montoReclamado' => 'nullable|numeric',
+            'descripcionServicio' => 'required|string|max:1050',
+            'checkReclamoForm' => 'required|boolean',
+            'aceptaPoliticaPrivacidad' => 'required|boolean',
+        ]);
 
-            $reclamacion = Reclamacion::create($validated);
-
-            return response()->json([
-                'message' => 'Reclamación creada exitosamente',
-                'data' => $reclamacion
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error al crear la reclamación',
-                'error' => $e->getMessage()
-            ], 500);
+        if($validated->fails()){
+            return response()->json(['errors' => $validated->errors()], 400);
         }
+
+        $datos = $request->all();
+        // Agregar fecha de reclamo actual y estado inicial
+        $datos['fechaReclamo'] = now();
+        $datos['estadoReclamo'] = 'PENDIENTE';
+
+        // Crear una nueva reclamación
+        $reclamacion = Reclamacion::create($datos);
+
+        return response()->json([
+            'message' => 'Reclamación guardada exitosamente',
+            'data' => $reclamacion,
+        ], 201);
     }
-    /**
-     * Eliminar una reclamación por ID.
-     */
+
+    public function update(Request $request, $id){
+        $reclamacion = Reclamacion::find($id);
+
+        if (!$reclamacion) {
+            return response()->json(['error' => 'Reclamación no encontrada'], 404);
+        }
+
+        $validated = $request->validate([
+            'estadoReclamo' => 'required|in:PENDIENTE,ATENDIDO',
+        ]);
+
+        $reclamacion->update([
+            'estadoReclamo' => $request->estadoReclamo,
+        ]);
+
+        return response()->json([
+            'message' => 'Estado actualizado exitosamente',
+            'data' => $reclamacion,
+        ], 200);
+    }
+
     public function delete($id)
     {
-        try {
-            $reclamacion = Reclamacion::findOrFail($id);
-            $reclamacion->delete();
+        $reclamacion = Reclamacion::find($id);
 
-            return response()->json([
-                'message' => 'Reclamación eliminada correctamente'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error al eliminar la reclamación',
-                'error' => $e->getMessage()
-            ], 500);
+        if (!$reclamacion) {
+            return response()->json(['error' => 'Reclamación no encontrada'], 404);
         }
+
+        $reclamacion->delete();
+
+        return response()->json(['message' => 'Reclamación eliminada exitosamente'], 200);
     }
 }
