@@ -92,7 +92,7 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json([
                 'status'  => 'error',
-                'message' => 'Esta cuenta no está registrada en Digimedia.'
+                'message' => 'Esta cuenta no está registrada en Neon Led Publicidad.'
             ], 404);
         }
 
