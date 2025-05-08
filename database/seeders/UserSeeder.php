@@ -17,18 +17,9 @@ class UserSeeder extends Seeder
     {
         $users = [
             [
-                'name' => 'Jose Luis',
-                'email' => 'joseluis@example.com',
+                'name' => 'Juan Carlos',
+                'email' => 'juancarlos@example.com',
                 'email_verified_at' => Carbon::now(),
-                'password' => Hash::make('12345678'),
-                'remember_token' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Gonzalo',
-                'email' => 'gonzalo@example.com',
-                'email_verified_at' => null,
                 'password' => Hash::make('12345678'),
                 'remember_token' => null,
                 'created_at' => now(),
