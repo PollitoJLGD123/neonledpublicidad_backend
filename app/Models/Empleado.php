@@ -12,7 +12,7 @@ class   Empleado extends Model
     protected $table = 'empleados';
     protected $primaryKey = 'id_empleado';
     public $timestamps = false;
-    
+
     protected $fillable = [
         'nombre',
         'apellido',
@@ -42,5 +42,10 @@ class   Empleado extends Model
             $allowedIds = config('special_access.employee_ids', []);
             return in_array($this->id_empleado, $allowedIds);
         });
+    }
+
+    public function blog()
+    {
+        return $this->hasMany(Blog::class, 'id_empleado', 'id_empleado');
     }
 }

@@ -67,16 +67,7 @@ class EmpleadoSeeder extends Seeder
                 'telefono' => '985237799',
                 'id_user' => 6,
                 'id_rol' => 1,
-            ],
-            [
-                'nombre' => 'Pedro David',
-                'apellido' => 'De la Cruz Díaz',
-                'email' => 'delacruz0e72ef@outlook.com',
-                'dni' => '73944334',
-                'telefono' => '986657935',
-                'id_user' => 7,
-                'id_rol' => 1,
-            ],
+            ]
         ];
         DB::table('empleados')->insert($empleados);
     }
