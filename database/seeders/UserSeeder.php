@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
@@ -17,13 +15,39 @@ class UserSeeder extends Seeder
     {
         $users = [
             [
+                'name' => 'Kevin',
+                'email' => 'keving.kpg@gmail.com',
+                'password' => Hash::make('F@Q#n64QuJm%'),
+            ],
+            [
+                'name' => 'Jose Luis',
+                'email' => 'joseluisjlgd123@gmail.com',
+                'password' => Hash::make('j8#m2%Q2g2SW'),
+            ],
+            [
                 'name' => 'Juan Carlos',
-                'email' => 'juancarlos@example.com',
-                'email_verified_at' => Carbon::now(),
+                'email' => 'tmlighting@hotmail.com',
+                'password' => Hash::make('Vqw&Kk4o$Q7c'),
+            ],
+            [
+                'name' => 'Krizzia Martina',
+                'email' => 'krizzia_saavedra201@hotmail.com',
+                'password' => Hash::make('2XQsrPELv$&Y'),
+            ],
+            [
+                'name' => 'Gonzalo Fernando',
+                'email' => 'gogozgallardo22@gmail.com',
                 'password' => Hash::make('12345678'),
-                'remember_token' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Piero Alexander',
+                'email' => 'pierocatacorayt13@gmail.com',
+                'password' => Hash::make('12345678'),
+            ],
+            [
+                'name' => 'Pedro David',
+                'email' => 'delacruz0e72ef@outlook.com',
+                'password' => Hash::make('12345678'),
             ]
         ];
 

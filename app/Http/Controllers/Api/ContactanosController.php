@@ -3,71 +3,97 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Contactanos;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class ContactanosController extends Controller
 {
-    // Obtener la lista de contactos con paginación
-    public function get()
+    public function get(Request $request)
     {
-        $contactos = Contactanos::paginate(20); // Devuelve contactos paginados de 20 en 20
+        $contactos = Contactanos::paginate(4);
         return response()->json($contactos, 200);
     }
 
-    // Crear un nuevo contacto
-    public function create(Request $request)
+    public function getById($id)
     {
-
-        $validator = Validator::make($request->all(), [
-            'nombre' => 'required|string|max:250',
-            'apellido' => 'required|string|max:250',
-            'telefono' => 'required|string|max:20',
-            'distrito' => 'required|string|max:250',
-            'email' => 'required|email|max:250',
-            'tipo_reclamo' => 'required|string|max:50',
-            'mensaje' => 'nullable|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
-        $contacto = Contactanos::create(array_merge($request->all(), [
-            'fecha_hora' => Carbon::now(),
-            'fecha_hora_actualizacion' => Carbon::now(),
-            'estado' => '0'
-        ]));
-
-        return response()->json(['message' => 'Contacto creado con éxito', 'contacto' => $contacto], 201);
-    }
-
-    public function updateEstado($id)
-    {
-        $contacto = Contactanos::findOrFail($id);
+        $contacto = Contactanos::find($id);
 
         if (!$contacto) {
-            return response()->json(['message' => 'Contacto no encontrado'], 404);
+            return response()->json(['error' => 'Contacto no encontrado'], 404);
         }
 
-        $contacto->estado = '1';
-        $contacto->save();
-
-        return response()->json(['message' => 'Estado actualizado con éxito', 'contacto' => $contacto], 200);
+        return response()->json([
+            'status' => 'success',
+            'data' => $contacto
+        ], 200);
     }
 
-    // Eliminar un contacto
+    public function create(Request $request)
+    {
+        $validated = Validator::make($request->all(), [
+            'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
+            'telefono' => 'required|string|max:20',
+            'distrito' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'detalle_reclamacion' => 'required|string|max:1050',
+            'mensaje' => 'required|string|max:1050',
+        ]);
+
+        if($validated->fails()){
+            return response()->json(['errors' => $validated->errors()], 400);
+        }
+
+        $data = $request->all();
+        $data['estado'] = 0; // Estado inicial (pendiente)
+        $data['fecha_hora'] = Carbon::now();
+        
+        Contactanos::create($data);
+
+        return response()->json([
+            'status' => 201,
+            'message' => 'Contacto guardado exitosamente'
+        ], 201);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $contacto = Contactanos::find($id);
+
+        if (!$contacto) {
+            return response()->json(['error' => 'Contacto no encontrado'], 404);
+        }
+
+        $validated = $request->validate([
+            'estado' => 'required|boolean',
+        ]);
+
+        $contacto->update([
+            'estado' => $request->estado,
+            'fecha_hora_actualizacion' => Carbon::now()
+        ]);
+
+        return response()->json([
+            'message' => 'Estado actualizado exitosamente',
+            'data' => $contacto,
+        ], 200);
+    }
+
     public function delete($id)
     {
         $contacto = Contactanos::find($id);
 
         if (!$contacto) {
-            return response()->json(['message' => 'Contacto no encontrado'], 404);
+            return response()->json(['error' => 'Contacto no encontrado'], 404);
         }
 
         $contacto->delete();
-        return response()->json(['message' => 'Contacto eliminado con éxito'], 200);
+
+        return response()->json([
+            'message' => 'Contacto eliminado exitosamente'
+        ], 200);
     }
 }

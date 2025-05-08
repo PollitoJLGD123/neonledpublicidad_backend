@@ -1,63 +1,101 @@
 <?php
 
-use App\Http\Controllers\Api\ContactanosController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ProductosController;
+use App\Http\Controllers\Api\RolController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PermisoController;
+use App\Http\Controllers\Api\BlogController;
+use App\Http\Controllers\Api\CardController;
+use App\Http\Controllers\Api\ModalesController;
+use App\Http\Controllers\Api\TarjetaController;
+use App\Http\Controllers\Api\BlogBodyController;
+use App\Http\Controllers\Api\BlogHeadController;
+use App\Http\Controllers\Api\EmpleadoController;
+use App\Http\Controllers\Api\ModalWatController;
+
+use App\Http\Controllers\Api\ModalMailController;
+use App\Http\Controllers\Api\ServicioController;
+use App\Http\Controllers\Api\BlogFooterController;
+use App\Http\Controllers\Api\ContactanosController;
 use App\Http\Controllers\Api\ReclamacionesController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\UsuariosController;
+use App\Http\Controllers\Api\CommendTarjetaController;
+use App\Http\Controllers\Api\ImageController;
 
-// Api Contactanos
+// rutas públicas
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/reset_password', [AuthController::class, "forgotPassword"]);
+Route::post('/update_password', [AuthController::class, "updatePassword"]);
 
-Route::get('/contactanos', [ContactanosController::class, 'get']);
-Route::post('/create_contactanos', [ContactanosController::class, 'create']);
-Route::put('/contactanos/{id}/estado', [ContactanosController::class, 'updateEstado']);
-Route::delete('/eliminar_contacto/{id}', [ContactanosController::class, 'delete']);
-
-
-// Api Productos
-// Ruta para obtener contactos con paginación (de 20 en 20)
-Route::get('/productos', [ProductosController::class, "get"]);
-// Usar validacion para  los datos con VALIDATE de laravel
-// Ruta para guardar contacto
-Route::post('/create_productos', [ProductosController::class, "create"]);
-// Ruta para actualizar el estado de un contacto (de 0 a 1)
-// Route::put('/productos/{id}', [ProductosController::class, "update"]);
-// Ruta para eliminar un contacto por ID
-Route::delete('/productos/{id}', [ProductosController::class, "delete"]);
+Route::post('/contactanos', [ContactanosController::class, "create"]);
+Route::post('/reclamaciones', [ReclamacionesController::class, "create"]);
+Route::post('/modales', [ModalesController::class, "create"]);
+// blogs públicos
+Route::get('/modales/send_wat/{id}', [ModalWatController::class, "sendWat"]);
 
 
-// Api Libro de reclamaciones
-// Ruta para obtener contactos con paginación (de 20 en 20)
-Route::get('/reclamaciones', [ReclamacionesController::class, "get"]);
-// Usar validacion para  los datos con VALIDATE de laravel
-// Api para guardar información en el backend ( nompre, apellido, tipo documento, nmr documento, email, celular, direccion, distrito, ciudad, tipo de reclamo, servicio, reclamo, ckeck, acepta politica de privacidad)
-Route::post('/create_reclamaciones', [ReclamacionesController::class, "create"]);
-// Ruta para eliminar un contacto por ID
-Route::delete('/reclamaciones/{id}', [ReclamacionesController::class, "delete"]);
+
+// rutas autenticadas
+Route::middleware('auth:sanctum')->group(function () {
+    // autenticación
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/empleados/verify-password', [EmpleadoController::class, 'verifyPassword']);
+
+    // imágenes
+    Route::post('/empleados/{id}/image', [EmpleadoController::class, 'updateProfileImage']);
+    Route::delete('/empleados/{id}/image', [EmpleadoController::class, 'deleteProfileImage']);
+
+    Route::middleware('permission:ver-contactos')->get('/contactanos', [ContactanosController::class, "get"]);
+    Route::middleware('permission:ver-reclamaciones')->get('/reclamaciones', [ReclamacionesController::class, "get"]);
+    Route::middleware('permission:ver-modales')->get('/modales', [ModalesController::class, "get"]);
+    Route::middleware('permission:ver-servicios')->get('/servicios', [ServicioController::class, "get"]);
+    Route::middleware('permission:ver-contactos')->get('/contactanos/{id}', [ContactanosController::class, "getById"]);
+    Route::middleware('permission:ver-reclamaciones')->get('/reclamaciones/{id}', [ReclamacionesController::class, "getById"]);
+    Route::middleware('permission:ver-modales')->get('/modales/{id}', [ModalesController::class, "getById"]);
+
+    //revisar emails y messages
+    Route::middleware('permission:ver-modales')->get('/modales/modals_emails_wats/{id}', [ModalesController::class, "getSendModales"]);
+    //enviar emails y messages
+    Route::middleware('permission:enviar-mensajes')->get('/modales/send_mail/{id}',[ModalMailController::class, "sendMail"]);
+    Route::middleware('permission:enviar-mensajes')->put('/modales/reportar_error/{id}', [ModalMailController::class, "reportarError"]);
+    Route::middleware('permission:enviar-mensajes')->put('/modales/estado_wat/{id}', [ModalWatController::class, "cambiarEstado"]);
+
+    // rutas update
+    Route::middleware('permission:editar-contactos')->put('/contactanos/{id}', [ContactanosController::class, "update"]);
+    Route::middleware('permission:editar-servicios')->put('/servicios/{id}', [ServicioController::class, "update"]);
+    Route::middleware('permission:editar-reclamaciones')->put('/reclamaciones/{id}', [ReclamacionesController::class, "update"]);
+    Route::middleware('permission:editar-modales')->put('/modales/{id}', [ModalesController::class, "update"]);
+
+    // rutas create
+    Route::middleware('permission:crear-servicios')->post('/servicios', [ServicioController::class, "create"]);
 
 
-// Api de Modales de contacto
-// Ruta para obtener contactos con paginación (de 20 en 20)
-// Route::get('/modal', [ProductosController::class, "get"]);
-// Usar validacion para  los datos con VALIDATE de laravel
-// Api para guardar información en el backend (nombre, telefono, correo, servicio_id)
-// Route::post('/modal', [ProductosController::class, "create"]);
-// Ruta para eliminar un contacto por ID
-// Route::delete('/modal/{id}', [ProductosController::class, "delete"]);
+    // rutas delete/destroy
+    Route::middleware('permission:eliminar-contactos')->delete('/contactanos/{id}', [ContactanosController::class, "delete"]);
+    Route::middleware('permission:eliminar-reclamaciones')->delete('/reclamaciones/{id}', [ReclamacionesController::class, "delete"]);
+    Route::middleware('permission:eliminar-modales')->delete('/modales/{id}', [ModalesController::class, "delete"]);
 
+    Route::middleware('permission:ver-empleados')->get('/empleados', [EmpleadoController::class, "getAllByPage"]);
+    Route::middleware('permission:ver-empleados')->get('/empleados/{id}', [EmpleadoController::class, "getById"]);
+    Route::middleware('permission:crear-empleados')->post('/empleados', [EmpleadoController::class, "create"]);
+    Route::middleware('permission:permisos-generales')->put('/empleados/{id}', [EmpleadoController::class, "update"]);
+    Route::middleware('permission:permisos-generales')->put('/empleados/pass/{id}', [EmpleadoController::class, "updatePass"]);
+    Route::middleware('permission:eliminar-empleados')->delete('/empleados/{id}', [EmpleadoController::class, "delete"]);
 
-//login de usuario
-Route::post('/user/login', [UserController::class, "login"]);
-// Ruta para obtener usuarios con paginación (de 20 en 20)
-Route::get('/user', [UserController::class, "getAllByPage"]);
-// Ruta para crear un usuario con datos (name, email, password)
-Route::post('/user', [UserController::class, "create"]);
-// Ruta para crear un usuario con datos (name) y id por parametros
-Route::put('/user/{id}', [UserController::class, "update"]);
-// Ruta para actualizar contraseña de un usuario con datos (password) y id por parametros
-Route::put('/user/pass/{id}', [UserController::class, "updatePass"]);
-// Ruta para eliminar un usuario con id por parametros
-Route::delete('/user/{id}', [UserController::class, "delete"]);
+    // roles
+    Route::middleware('permission:ver-roles')->get('/roles', [RolController::class, "index"]);
+    Route::middleware('permission:crear-roles')->post('/roles', [RolController::class, "store"]);
+    Route::middleware('permission:ver-roles')->get('/roles/{id}', [RolController::class, "show"]);
+    Route::middleware('permission:editar-roles')->put('/roles/{id}', [RolController::class, "update"]);
+    Route::middleware('permission:eliminar-roles')->delete('/roles/{id}', [RolController::class, "destroy"]);
+    Route::middleware('permission:ver-permisos')->get('/roles/{id}/permisos', [RolController::class, "getPermisos"]);
+    Route::middleware('permission:ver-permisos')->post('/roles/{id}/permisos', [RolController::class, "syncPermisos"]);
 
-
+    // permisos
+    Route::middleware('permission:ver-permisos')->get('/permisos', [PermisoController::class, "index"]);
+    Route::middleware('permission:ver-permisos')->get('/permisos/{id}', [PermisoController::class, "show"]);
+    Route::middleware('permission:crear-permisos')->post('/permisos', [PermisoController::class, "store"]);
+    Route::middleware('permission:editar-permisos')->put('/permisos/{id}', [PermisoController::class, "update"]);
+    Route::middleware('permission:eliminar-permisos')->delete('/permisos/{id}', [PermisoController::class, "destroy"]);
+});
