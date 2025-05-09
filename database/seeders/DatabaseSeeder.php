@@ -17,6 +17,12 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             RolSeeder::class,
             PermisosSeeder::class,
+            BlogHeaderSeeder::class,
+            BlogFooterSeeder::class,
+            CommendTarjetaSeeder::class,
+            BlogBodySeeder::class,
+            TarjetaSeeder::class,
+            BlogSeeder::class,
             ServicioSeeder::class,
             ModalservicioSeeder::class,
             WatModalSeeder::class,
@@ -25,6 +31,7 @@ class DatabaseSeeder extends Seeder
             ReclamacionSeeder::class,
             ContactanosSeeder::class,
             EmpleadoSeeder::class,
+            CardSeeder::class,
             ContactanosSeeder::class,
         ]);
     }
