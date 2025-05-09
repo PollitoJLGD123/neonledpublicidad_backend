@@ -14,7 +14,6 @@ use App\Http\Controllers\Api\EmpleadoController;
 use App\Http\Controllers\Api\ModalWatController;
 
 use App\Http\Controllers\Api\ModalMailController;
-use App\Http\Controllers\Api\ServicioController;
 use App\Http\Controllers\Api\BlogFooterController;
 use App\Http\Controllers\Api\ContactanosController;
 use App\Http\Controllers\Api\ReclamacionesController;
@@ -30,7 +29,17 @@ Route::post('/update_password', [AuthController::class, "updatePassword"]);
 Route::post('/contactanos', [ContactanosController::class, "create"]);
 Route::post('/reclamaciones', [ReclamacionesController::class, "create"]);
 Route::post('/modales', [ModalesController::class, "create"]);
-// blogs públicos
+
+// blogs públicos para ver los clientes
+Route::get('/cards', [CardController::class, "index"]);
+Route::get('/blogs/{id}', [BlogController::class, "show"]);
+Route::get('/blogs', [BlogController::class, "index"]);
+Route::get('/blog_head/{id}', [BlogHeadController::class, "show"]);
+Route::get('/blog_footer/{id}', [BlogFooterController::class, "show"]);
+Route::get('/blog_body/{id}', [BlogBodyController::class, "show"]);// blogs públicos
+
+
+
 Route::get('/modales/send_wat/{id}', [ModalWatController::class, "sendWat"]);
 
 
@@ -49,7 +58,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('permission:ver-contactos')->get('/contactanos', [ContactanosController::class, "get"]);
     Route::middleware('permission:ver-reclamaciones')->get('/reclamaciones', [ReclamacionesController::class, "get"]);
     Route::middleware('permission:ver-modales')->get('/modales', [ModalesController::class, "get"]);
-    Route::middleware('permission:ver-servicios')->get('/servicios', [ServicioController::class, "get"]);
     Route::middleware('permission:ver-contactos')->get('/contactanos/{id}', [ContactanosController::class, "getById"]);
     Route::middleware('permission:ver-reclamaciones')->get('/reclamaciones/{id}', [ReclamacionesController::class, "getById"]);
     Route::middleware('permission:ver-modales')->get('/modales/{id}', [ModalesController::class, "getById"]);
@@ -93,12 +101,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // rutas update
     Route::middleware('permission:editar-contactos')->put('/contactanos/{id}', [ContactanosController::class, "update"]);
-    Route::middleware('permission:editar-servicios')->put('/servicios/{id}', [ServicioController::class, "update"]);
     Route::middleware('permission:editar-reclamaciones')->put('/reclamaciones/{id}', [ReclamacionesController::class, "update"]);
     Route::middleware('permission:editar-modales')->put('/modales/{id}', [ModalesController::class, "update"]);
-
-    // rutas create
-    Route::middleware('permission:crear-servicios')->post('/servicios', [ServicioController::class, "create"]);
 
 
     // rutas delete/destroy
