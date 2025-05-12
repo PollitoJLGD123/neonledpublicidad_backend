@@ -53,11 +53,9 @@ class ReclamacionesController extends Controller
         }
 
         $datos = $request->all();
-        // Agregar fecha de reclamo actual y estado inicial
         $datos['fechaReclamo'] = now();
         $datos['estadoReclamo'] = 'PENDIENTE';
 
-        // Crear una nueva reclamación
         $reclamacion = Reclamacion::create($datos);
 
         return response()->json([

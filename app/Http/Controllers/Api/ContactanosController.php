@@ -39,7 +39,7 @@ class ContactanosController extends Controller
             'telefono' => 'required|string|max:20',
             'distrito' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'detalle_reclamacion' => 'required|string|max:1050',
+            'tipo_reclamo' => 'required|string|max:1050',
             'mensaje' => 'required|string|max:1050',
         ]);
 
@@ -50,7 +50,7 @@ class ContactanosController extends Controller
         $data = $request->all();
         $data['estado'] = 0; // Estado inicial (pendiente)
         $data['fecha_hora'] = Carbon::now();
-        
+
         Contactanos::create($data);
 
         return response()->json([
