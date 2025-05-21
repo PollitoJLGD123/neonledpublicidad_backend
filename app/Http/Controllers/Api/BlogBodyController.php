@@ -94,8 +94,8 @@ class BlogBodyController extends Controller
             DB::rollback();
             return response()->json([
                 "status"=> 500,
-                "message"=> "",
-                "id"=> $id,
+                "message"=> $ex->getMessage(),
+                "error"=> "Error interno del servidor"
                 ],500);
             }
     }

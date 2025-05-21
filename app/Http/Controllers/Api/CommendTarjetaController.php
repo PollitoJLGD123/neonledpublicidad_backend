@@ -62,7 +62,7 @@ class CommendTarjetaController extends Controller
 
             $tarjeta = CommendTarjeta::find($id);
 
-            if(! $tarjeta){
+            if(!$tarjeta){
                 return response()->json(
                     [
                         'status'=> 404,
